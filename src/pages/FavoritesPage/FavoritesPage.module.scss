@@ -1,0 +1,10 @@
+.container {
+  margin: 0 auto 0 auto;
+  @media screen and (min-width: 768px) {
+    width: 85%;
+  }
+}
+
+.text {
+  font-size: 1.2rem;
+}

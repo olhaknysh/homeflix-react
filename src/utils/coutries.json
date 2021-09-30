@@ -1,0 +1,90 @@
+[
+    {
+        "label": "Australia",
+        "value": "AU"
+    },
+    {
+        "label": "Belgium",
+        "value": "BE"
+    },
+    {
+        "label": "Canada",
+        "value": "CA"
+    },
+    {
+        "label": "China",
+        "value": "CN"
+    },
+    {
+        "label": "Czech Republic",
+        "value": "CZ"
+    },
+    {
+        "label": "Denmark",
+        "value": "DK"
+    },
+    {
+        "label": "Finland",
+        "value": "FI"
+    },
+    {
+        "label": "France",
+        "value": "FR"
+    },
+    {
+        "label": "Hong Kong",
+        "value": "HK"
+    },
+    {
+        "label": "Hungary",
+        "value": "HU"
+    },
+    {
+        "label": "Japan",
+        "value": "JP"
+    },
+    {
+        "label": "South Korea",
+        "value": "KR"
+    },
+    {
+        "label": "Netherlands",
+        "value": "NL"
+    },
+    {
+        "label": "Norway",
+        "value": "NO"
+    },
+    {
+        "label": "Portugal",
+        "value": "PT"
+    },
+    {
+        "label": "Russian Federation",
+        "value": "RU"
+    },
+    {
+        "label": "Spain",
+        "value": "ES"
+    },
+    {
+        "label": "Thailand",
+        "value": "TH"
+    },
+    {
+        "label": "Turkey",
+        "value": "TR"
+    },
+    {
+        "label": "Ukraine",
+        "value": "UA"
+    },
+    {
+        "label": "United Kingdom",
+        "value": "GB"
+    },
+    {
+        "label": "United States",
+        "value": "US"
+    }
+]

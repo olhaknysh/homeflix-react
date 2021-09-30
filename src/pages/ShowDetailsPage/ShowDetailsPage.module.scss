@@ -1,0 +1,78 @@
+.container {
+  position: relative;
+  @media screen and (min-width: 768px) {
+    width: 85%;
+    margin: 0 auto 0 auto;
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+
+.arrow {
+  position: absolute;
+  top: 0px;
+  left: -40px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.favorite {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.send {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.friendsList {
+  position: absolute;
+  top: 80px;
+  right: -10px;
+  padding: 0;
+
+  list-style: none;
+  border: 1px solid;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.friend {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.image {
+  width: 300px;
+  border-radius: 10px;
+  @media screen and (min-width: 768px) {
+    width: 50%;
+  }
+}
+
+.info {
+  @media screen and (min-width: 768px) {
+    margin-left: 30px;
+  }
+}
+
+.name {
+  font-weight: bold;
+  font-size: 1.4rem;
+}

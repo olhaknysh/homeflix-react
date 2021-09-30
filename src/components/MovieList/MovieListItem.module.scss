@@ -1,0 +1,56 @@
+.item {
+  position: relative;
+  display: inline-block;
+
+  justify-self: center;
+
+  padding: 10px;
+  border-radius: 5px;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.07);
+  transition: transform 300ms ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+}
+
+.link {
+  display: block;
+  width: 280px;
+  height: 370px;
+}
+
+.info {
+  position: absolute;
+  bottom: 20px;
+  color: #fff;
+}
+
+.name {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  color: #fff;
+}
+
+.genres {
+  display: flex;
+  color: #fff;
+
+  & p {
+    margin: 0 10px 0 0;
+  }
+}
+
+.nogenre {
+  margin: 0;
+}
+
+.language {
+  margin: 0;
+}

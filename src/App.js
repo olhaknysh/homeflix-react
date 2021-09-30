@@ -1,42 +1,86 @@
-import { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser } from './redux/auth/auth-operations';
+import { getUserUid } from './redux/auth/auth-selectors';
 
 import AppBar from './components/AppBar';
-import Container from '@material-ui/core/Container';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 
 import routes from './utils/routes';
 
-
-import { dividerClasses } from '@material-ui/core';
-
 const HomePage = lazy(() =>
-    import('./pages/HomePage' /* webpackChunkName: "HomePage */),
+  import('./pages/HomePage' /* webpackChunkName: "HomePage */)
 );
 
 const LoginPage = lazy(() =>
-    import('./pages/LoginPage' /* webpackChunkName: "LoginPage */),
+  import('./pages/LoginPage' /* webpackChunkName: "LoginPage */)
 );
 
 const RegisterPage = lazy(() =>
-    import('./pages/RegisterPage' /* webpackChunkName: "RegisterPage */),
+  import('./pages/RegisterPage' /* webpackChunkName: "RegisterPage */)
 );
 
 const AccountPage = lazy(() =>
-    import('./pages/AccountPage' /* webpackChunkName: "AccountPage */),
+  import('./pages/AccountPage' /* webpackChunkName: "AccountPage */)
 );
 
 const FavoritesPage = lazy(() =>
-    import('./pages/FavoritesPage' /* webpackChunkName: "FavoritesPage */),
+  import('./pages/FavoritesPage' /* webpackChunkName: "FavoritesPage */)
+);
+
+const SearchPage = lazy(() =>
+  import('./pages/SearchPage' /* webpackChunkName: "SearchPage */)
+);
+
+const ShowDetailsPage = lazy(() =>
+  import('./pages/ShowDetailsPage' /* webpackChunkName: "ShowDetailsPage */)
 );
 
 const App = () => {
-    return (
-        <div></div>
-    )
-}
+  const userUid = useSelector(getUserUid);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log('nooo');
+    dispatch(getCurrentUser());
+  }, []);
+
+  return (
+    <div className='container'>
+      <AppBar />
+      <Suspense fallback={<p>Loading...</p>}>
+        <Switch>
+          <Route exact path={routes.home} component={HomePage} />
+          <Route path={routes.showDetails} component={ShowDetailsPage} />
+          <PublicRoute
+            restricted
+            path={routes.register}
+            redirectTo={routes.account}
+          >
+            <RegisterPage />
+          </PublicRoute>
+          <PublicRoute
+            restricted
+            redirectTo={routes.account}
+            path={routes.login}
+          >
+            <LoginPage />
+          </PublicRoute>
+          <PrivateRoute redirectTo={routes.login} path={routes.account}>
+            <AccountPage />
+          </PrivateRoute>
+          <PrivateRoute redirectTo={routes.login} path={routes.favorites}>
+            <FavoritesPage />
+          </PrivateRoute>
+          <PrivateRoute redirectTo={routes.login} path={routes.search}>
+            <SearchPage />
+          </PrivateRoute>
+        </Switch>
+      </Suspense>
+    </div>
+  );
+};
 
 export default App;

@@ -1,0 +1,54 @@
+.container {
+  margin: 0 auto 0 auto;
+  width: 200px;
+
+  @media screen and (min-width: 768px) {
+    width: 85%;
+  }
+}
+
+.userInfo {
+  @media screen and (min-width: 768px) {
+    width: 85%;
+    display: flex;
+    align-items: flex-end;
+
+    & div {
+      margin-left: 40px;
+    }
+  }
+}
+
+.name {
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+.email {
+  font-size: 1rem;
+  color: #9c9c9c;
+}
+
+.image {
+  width: 200px;
+  border-radius: 50%;
+}
+
+.button {
+  width: 100%;
+  background-image: linear-gradient(to left, #d2bdff, #1d1d1d);
+  padding: 10px 0;
+  margin: 25px 0 25px 0;
+  border: transparent;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: transform 300ms ease-in-out;
+  width: 200px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+  }
+}
