@@ -76,3 +76,18 @@
   font-weight: bold;
   font-size: 1.4rem;
 }
+
+.preloader {
+  display: block;
+  width: 340px;
+  text-align: center;
+}
+
+.watchlist {
+  position: absolute;
+  top: 0px;
+  right: 35px;
+  &:hover {
+    cursor: pointer;
+  }
+}

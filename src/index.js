@@ -12,17 +12,18 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './redux/store';
+import SplashScreen from './components/SplashScreen';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <PersistGate loading={<p>Loading...</p>} persistor={persistor}>
+      <PersistGate
+        loading={<SplashScreen />}
+        persistor={persistor}
+        onBeforeLift={() => new Promise((resolve) => setTimeout(resolve, 3000))}
+      >
         <Provider store={store}>
-          {/* <FirebaseProvider> */}
-          {/* <ReactReduxFirebaseProvider {...rrfProps}> */}
           <App />
-          {/* </ReactReduxFirebaseProvider> */}
-          {/* </FirebaseProvider> */}
         </Provider>
       </PersistGate>
     </BrowserRouter>

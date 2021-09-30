@@ -30,8 +30,57 @@ const photoURL = createReducer('', {
   [authActions.logoutSuccess]: () => '',
 });
 
-const setError = (_, { payload }) => payload;
+const favoriteShows = createReducer([], {
+  [authActions.favoriteShowsSuccess]: (_, { payload }) => payload,
+  [authActions.logoutSuccess]: () => [],
+});
 
+const favoriteShowsId = createReducer([], {
+  [authActions.favoriteShowsIdSuccess]: (state, { payload }) => [
+    ...state,
+    payload,
+  ],
+  [authActions.favoriteShowsIdDeleteSuccess]: (state, { payload }) =>
+    state.filter((item) => item !== payload),
+  [authActions.getCurrentUserSuccess]: (_, { payload }) => payload.favorites,
+  [authActions.loginSuccess]: (_, { payload }) => payload.favorites,
+  [authActions.registerSuccess]: (_, { payload }) => payload.favorites,
+  [authActions.logoutSuccess]: () => [],
+});
+
+const friends = createReducer([], {
+  [authActions.getCurrentUserSuccess]: (_, { payload }) => payload.friends,
+  [authActions.addFriendSuccess]: (state, { payload }) => [...state, payload],
+  [authActions.loginSuccess]: (_, { payload }) => payload.friends,
+  [authActions.registerSuccess]: (_, { payload }) => payload.favorites,
+  [authActions.deleteFriendSuccess]: (state, { payload }) =>
+    state.filter((item) => item.uid !== payload),
+  [authActions.logoutSuccess]: () => [],
+});
+
+const preferences = createReducer([], {
+  [authActions.getCurrentUserSuccess]: (_, { payload }) => payload.preferences,
+  [authActions.loginSuccess]: (_, { payload }) => payload.preferences,
+  [authActions.registerSuccess]: (_, { payload }) => payload.preferences,
+  [authActions.deleteFromPreferencesSuccess]: (state, { payload }) =>
+    state.filter((item) => item.showId !== Number(payload)),
+  [authActions.logoutSuccess]: () => [],
+});
+
+const watchlist = createReducer([], {
+  [authActions.getCurrentUserSuccess]: (_, { payload }) => payload.watchList,
+  [authActions.loginSuccess]: (_, { payload }) => payload.watchList,
+  [authActions.registerSuccess]: (_, { payload }) => payload.watchList,
+  [authActions.addShowToWatchListSuccess]: (state, { payload }) => [
+    ...state,
+    payload,
+  ],
+  [authActions.deleteShowToWatchListSuccess]: (state, { payload }) =>
+    state.filter((item) => item.id !== Number(payload)),
+  [authActions.logoutSuccess]: () => [],
+});
+
+const setError = (_, { payload }) => payload;
 const error = createReducer(null, {
   [authActions.registerError]: setError,
   [authActions.loginError]: setError,
@@ -42,6 +91,9 @@ const error = createReducer(null, {
   [authActions.favoriteShowsIdDeleteError]: setError,
   [authActions.addFriendError]: setError,
   [authActions.deleteFriendError]: setError,
+  [authActions.deleteFromPreferencesError]: setError,
+  [authActions.addShowToWatchListError]: setError,
+  [authActions.deleteShowToWatchListError]: setError,
   [authActions.registerSuccess]: () => null,
   [authActions.loginSuccess]: () => null,
   [authActions.logoutSuccess]: () => null,
@@ -50,6 +102,9 @@ const error = createReducer(null, {
   [authActions.favoriteShowsIdSuccess]: () => null,
   [authActions.addFriendSuccess]: () => null,
   [authActions.deleteFriendSuccess]: () => null,
+  [authActions.deleteFromPreferencesSuccess]: () => null,
+  [authActions.addShowToWatchListSuccess]: () => null,
+  [authActions.deleteShowToWatchListSuccess]: () => null,
 });
 
 const isAuthenticated = createReducer(false, {
@@ -68,6 +123,13 @@ const isLoading = createReducer(false, {
   [authActions.logoutRequest]: () => true,
   [authActions.registerRequest]: () => true,
   [authActions.favoriteShowsRequest]: () => true,
+  [authActions.favoriteShowsIdRequest]: () => true,
+  [authActions.favoriteShowsIdDeleteRequest]: () => true,
+  [authActions.addFriendRequest]: () => true,
+  [authActions.deleteFriendRequest]: () => true,
+  [authActions.deleteFromPreferencesRequest]: () => true,
+  [authActions.addShowToWatchListRequest]: () => true,
+  [authActions.deleteShowToWatchListRequest]: () => true,
   [authActions.getCurrentUserSuccess]: () => false,
   [authActions.getCurrentUserError]: () => false,
   [authActions.loginSuccess]: () => false,
@@ -78,32 +140,20 @@ const isLoading = createReducer(false, {
   [authActions.registerError]: () => false,
   [authActions.favoriteShowsSuccess]: () => false,
   [authActions.favoriteShowsError]: () => false,
-});
-
-const favoriteShows = createReducer([], {
-  [authActions.favoriteShowsSuccess]: (_, { payload }) => payload,
-  [authActions.favoriteShowsError]: () => [],
-});
-
-const favoriteShowsId = createReducer([], {
-  [authActions.favoriteShowsIdSuccess]: (state, { payload }) => [
-    ...state,
-    payload,
-  ],
-  [authActions.favoriteShowsIdDeleteSuccess]: (state, { payload }) =>
-    state.filter((item) => item !== payload),
-  [authActions.getCurrentUserSuccess]: (_, { payload }) => payload.favorites,
-  [authActions.loginSuccess]: (_, { payload }) => payload.favorites,
-  [authActions.registerSuccess]: (_, { payload }) => payload.favorites,
-});
-
-const friends = createReducer([], {
-  [authActions.getCurrentUserSuccess]: (_, { payload }) => payload.friends,
-  [authActions.addFriendSuccess]: (state, { payload }) => [...state, payload],
-  [authActions.loginSuccess]: (_, { payload }) => payload.friends,
-  [authActions.registerSuccess]: (_, { payload }) => payload.favorites,
-  [authActions.deleteFriendSuccess]: (state, { payload }) =>
-    state.filter((item) => item.uid !== payload),
+  [authActions.favoriteShowsIdSuccess]: () => false,
+  [authActions.favoriteShowsIdError]: () => false,
+  [authActions.favoriteShowsIdDeleteSuccess]: () => false,
+  [authActions.favoriteShowsIdDeleteError]: () => false,
+  [authActions.addFriendSuccess]: () => false,
+  [authActions.addFriendError]: () => false,
+  [authActions.deleteFriendSuccess]: () => false,
+  [authActions.deleteFriendError]: () => false,
+  [authActions.deleteFromPreferencesSuccess]: () => false,
+  [authActions.deleteFromPreferencesError]: () => false,
+  [authActions.addShowToWatchListSuccess]: () => false,
+  [authActions.addShowToWatchListError]: () => false,
+  [authActions.deleteShowToWatchListSuccess]: () => false,
+  [authActions.deleteShowToWatchListError]: () => false,
 });
 
 export default combineReducers({
@@ -117,4 +167,6 @@ export default combineReducers({
   favoriteShows,
   favoriteShowsId,
   friends,
+  preferences,
+  watchlist,
 });

@@ -12,14 +12,6 @@ const monthUpdatedRequest = createAction('showUpdates/monthUpdatedRequest');
 const monthUpdatedSuccess = createAction('showUpdates/monthUpdatedSuccess');
 const monthUpdatedError = createAction('showUpdates/monthUpdatedError');
 
-const collectShowsInfoRequest = createAction(
-  'showUpdates/collectShowsInfoRequest'
-);
-const collectShowsInfoSuccess = createAction(
-  'showUpdates/collectShowsInfoSuccess'
-);
-const collectShowsInfoError = createAction('showUpdates/collectShowsInfoError');
-
 export default {
   todayUpdatedRequest,
   todayUpdatedSuccess,
@@ -30,7 +22,4 @@ export default {
   monthUpdatedRequest,
   monthUpdatedSuccess,
   monthUpdatedError,
-  collectShowsInfoRequest,
-  collectShowsInfoSuccess,
-  collectShowsInfoError,
 };

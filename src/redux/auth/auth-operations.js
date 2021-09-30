@@ -1,19 +1,9 @@
 import authActions from './auth-actions';
 import app from '../../firebase';
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signInWithRedirect,
-  FacebookAuthProvider,
-} from 'firebase/auth';
-// import { doc, setDoc } from 'firebase/firestore';
-// import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-import { getDatabase, ref, set, onValue } from 'firebase/database';
-import { getFirestore, getDoc, FieldValue } from 'firebase/firestore';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore, getDoc } from 'firebase/firestore';
 import {
   collection,
-  addDoc,
   setDoc,
   doc,
   updateDoc,
@@ -22,7 +12,6 @@ import {
 } from 'firebase/firestore';
 import { getDocs } from 'firebase/firestore';
 import axios from 'axios';
-// import { auth } from 'firebaseui';
 
 export const login =
   ({ email, password }) =>
@@ -42,10 +31,14 @@ export const login =
 
       let favorites = [];
       let friends = [];
+      let preferences = [];
+      let watchList = [];
 
       if (docSnap.exists()) {
         favorites = docSnap.data().favorites;
         friends = docSnap.data().friends;
+        preferences = docSnap.data().preferences;
+        watchList = docSnap.data().watchList;
       } else {
         console.log('No such document!');
       }
@@ -57,6 +50,8 @@ export const login =
           photoURL,
           favorites,
           friends,
+          preferences,
+          watchList,
         })
       );
     } catch (error) {
@@ -88,6 +83,8 @@ export const register =
         favorites: [],
         friends: [],
         photoURL,
+        preferences: [],
+        watchList: [],
       });
 
       if (!displayName) {
@@ -131,13 +128,6 @@ export const getCurrentUser = () => async (dispatch, getState) => {
 
   dispatch(authActions.getCurrentUserRequest());
   try {
-    // app.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     const {
-    //       currentUser: { _delegate },
-    //     } = app.auth();
-    //     const { email: mail, uid, photoURL, displayName } = _delegate;
-
     const db = getFirestore();
     const usersSnapshot = await getDocs(collection(db, 'users'));
 
@@ -150,6 +140,8 @@ export const getCurrentUser = () => async (dispatch, getState) => {
           name: displayName,
           favorites,
           friends,
+          preferences,
+          watchList,
         } = doc.data();
         dispatch(
           authActions.getCurrentUserSuccess({
@@ -159,6 +151,8 @@ export const getCurrentUser = () => async (dispatch, getState) => {
             displayName,
             favorites,
             friends,
+            preferences,
+            watchList,
           })
         );
       }
@@ -186,6 +180,8 @@ export const googleLogin = () => async (dispatch) => {
         photoURL,
         favorites: [],
         friends: [],
+        preferences: [],
+        watchList: [],
       });
 
       dispatch(
@@ -196,6 +192,8 @@ export const googleLogin = () => async (dispatch) => {
           uid,
           favorites: [],
           friends: [],
+          preferences: [],
+          watchList: [],
         })
       );
     })
@@ -203,33 +201,6 @@ export const googleLogin = () => async (dispatch) => {
       dispatch(authActions.loginError(error.message));
     });
 };
-
-// export const facebookLogin = () => async (dispatch) => {
-//   const provider = new FacebookAuthProvider();
-//   const auth = getAuth();
-//   signInWithPopup(auth, provider)
-//     .then((result) => {
-//       const user = result.user;
-//       console.log(user);
-
-//       // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-//       const credential = FacebookAuthProvider.credentialFromResult(result);
-//       const accessToken = credential.accessToken;
-
-//       // ...
-//     })
-//     .catch((error) => {
-//       // Handle Errors here.
-//       const errorCode = error.code;
-//       const errorMessage = error.message;
-//       // The email of the user's account used.
-//       const email = error.email;
-//       // The AuthCredential type that was used.
-//       const credential = FacebookAuthProvider.credentialFromError(error);
-
-//       // ...
-//     });
-// };
 
 export const getFavoriteShows = (ids) => async (dispatch) => {
   dispatch(authActions.favoriteShowsRequest());
@@ -249,7 +220,6 @@ export const getFavoriteShows = (ids) => async (dispatch) => {
 
 export const addIdToFavorite = (id, uid) => async (dispatch) => {
   dispatch(authActions.favoriteShowsIdRequest());
-  console.log('add');
 
   try {
     const db = getFirestore();
@@ -331,3 +301,66 @@ export const deleteFromFriends = (friendUid) => async (dispatch, getState) => {
     dispatch(authActions.deleteFriendError(error.message));
   }
 };
+
+export const deleteFromPreferences = (id, uid) => async (dispatch) => {
+  dispatch(authActions.deleteFromPreferencesRequest());
+
+  console.log(id, 'id');
+  console.log(uid, 'uid');
+
+  try {
+    const db = getFirestore();
+    const userRef = doc(db, 'users', uid);
+    const userSnap = await getDoc(userRef);
+    await updateDoc(userRef, {
+      preferences: userSnap
+        .data()
+        .preferences.filter((show) => show.showId !== Number(id)),
+    });
+    dispatch(authActions.deleteFromPreferencesSuccess(id));
+  } catch (error) {
+    dispatch(authActions.deleteFromPreferencesError(error.message));
+  }
+};
+
+export const addFilmToWatchList =
+  ({ id, uid, name }) =>
+  async (dispatch) => {
+    dispatch(authActions.addShowToWatchListRequest());
+
+    try {
+      const db = getFirestore();
+      const userRef = doc(db, 'users', uid);
+
+      await updateDoc(userRef, {
+        watchList: arrayUnion({ name, id }),
+      });
+      dispatch(authActions.addShowToWatchListSuccess({ id, name }));
+    } catch (error) {
+      dispatch(authActions.addShowToWatchListError(error.message));
+    }
+  };
+
+export const deleteFilmFromWatchList =
+  ({ id, uid }) =>
+  async (dispatch) => {
+    dispatch(authActions.deleteShowToWatchListRequest());
+    console.log(id);
+    console.log(uid);
+
+    try {
+      const db = getFirestore();
+      const userRef = doc(db, 'users', uid);
+      const userSnap = await getDoc(userRef);
+
+      await updateDoc(userRef, {
+        watchList: userSnap
+          .data()
+          .watchList.filter((show) => show.id !== Number(id)),
+      });
+
+      dispatch(authActions.deleteShowToWatchListSuccess(id));
+    } catch (error) {
+      dispatch(authActions.deleteShowToWatchListError(error.message));
+    }
+  };

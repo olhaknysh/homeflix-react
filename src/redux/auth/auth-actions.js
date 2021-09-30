@@ -42,6 +42,34 @@ const deleteFriendRequest = createAction('auth/deleteFriendRequest');
 const deleteFriendSuccess = createAction('auth/deleteFriendSuccess');
 const deleteFriendError = createAction('auth/deleteFriendError');
 
+const deleteFromPreferencesRequest = createAction(
+  'auth/deleteFromPreferencesRequest'
+);
+const deleteFromPreferencesSuccess = createAction(
+  'auth/deleteFromPreferencesSuccess'
+);
+const deleteFromPreferencesError = createAction(
+  'auth/deleteFromPreferencesError'
+);
+
+const addShowToWatchListRequest = createAction(
+  'auth/addShowToWatchListRequest'
+);
+const addShowToWatchListSuccess = createAction(
+  'auth/addShowToWatchListSuccess'
+);
+const addShowToWatchListError = createAction('auth/addShowToWatchListError');
+
+const deleteShowToWatchListRequest = createAction(
+  'auth/deleteShowToWatchListRequest'
+);
+const deleteShowToWatchListSuccess = createAction(
+  'auth/deleteShowToWatchListSuccess'
+);
+const deleteShowToWatchListError = createAction(
+  'auth/deleteShowToWatchListError'
+);
+
 export default {
   registerRequest,
   registerSuccess,
@@ -70,4 +98,13 @@ export default {
   deleteFriendRequest,
   deleteFriendSuccess,
   deleteFriendError,
+  deleteFromPreferencesRequest,
+  deleteFromPreferencesSuccess,
+  deleteFromPreferencesError,
+  addShowToWatchListRequest,
+  addShowToWatchListSuccess,
+  addShowToWatchListError,
+  deleteShowToWatchListRequest,
+  deleteShowToWatchListSuccess,
+  deleteShowToWatchListError,
 };

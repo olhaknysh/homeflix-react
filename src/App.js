@@ -50,7 +50,7 @@ const App = () => {
   return (
     <div className='container'>
       <AppBar />
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<p>Loading</p>}>
         <Switch>
           <Route exact path={routes.home} component={HomePage} />
           <Route path={routes.showDetails} component={ShowDetailsPage} />

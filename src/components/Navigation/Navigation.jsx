@@ -14,7 +14,8 @@ const Navigation = () => (
       <NavLink
         activeClassName={styles.selected}
         className={styles.item}
-        to={routes.home}
+                to={routes.home}
+                exact
       >
         <AiFillHome />
       </NavLink>

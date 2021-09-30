@@ -2,11 +2,15 @@ import CountryForm from './CountryForm';
 import { useState, useEffect } from 'react';
 import CountriesList from './CountriesList';
 
-import { todaysShowsOperations } from '../../redux/todayShows';
-import { useDispatch } from 'react-redux';
+import {
+  todaysShowsOperations,
+  todaysShowsSelectors,
+} from '../../redux/todayShows';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './Countries.module.scss';
 
 import countries from '../../utils/coutries.json';
+import Loader from '../Loader';
 
 const countriesNames = countries.map((country) => country);
 
@@ -15,6 +19,8 @@ const Countries = () => {
   const [country, setCountry] = useState(countries[id].value);
   const [selectedCountry, setSelectedCountry] = useState(false);
   const dispatch = useDispatch();
+  const isLoading = useSelector(todaysShowsSelectors.todayShowsLoading);
+  const error = useSelector(todaysShowsSelectors.todayShowsError);
 
   const selectCountry = (country) => {
     setCountry(country);

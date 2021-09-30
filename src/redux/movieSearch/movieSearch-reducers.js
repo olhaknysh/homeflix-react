@@ -4,7 +4,6 @@ import searchActions from './movieSearch-actions';
 
 const moviesSearch = createReducer([], {
   [searchActions.movieSearchSuccess]: (_, { payload }) => payload,
-  [searchActions.movieSearchError]: () => [],
 });
 
 const setError = (_, { payload }) => payload;
