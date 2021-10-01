@@ -40,3 +40,12 @@
 .button:hover {
   cursor: pointer;
 }
+
+.delete {
+  background-color: transparent;
+  border: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

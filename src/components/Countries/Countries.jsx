@@ -80,11 +80,12 @@ const Countries = () => {
 
     return () => clearInterval(timerId);
   }, [id, country, selectedCountry]);
+    
   return (
     <div className={styles.container}>
       <h2>{id === 0 ? countries[21].label : countries[id - 1].label}</h2>
       <CountryForm todayDate={getTodayDate()} selectCountry={selectCountry} />
-      <CountriesList />
+      {isLoading ? <Loader /> : <CountriesList />}
     </div>
   );
 };

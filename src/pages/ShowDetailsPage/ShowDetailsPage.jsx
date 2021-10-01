@@ -18,8 +18,11 @@ import {
     deleteIdFromFavorite, addFilmToWatchList
 } from '../../redux/auth/auth-operations';
 import { FiSend } from 'react-icons/fi';
-import NoPoster from '../../utils/images/no-poster.jpeg'
+import NoPoster from '../../utils/images/no-poster.png'
 import { BiCameraMovie } from 'react-icons/bi'
+import Loader from '../../components/Loader'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class ShowDetailsPage extends Component {
   state = {
@@ -72,6 +75,8 @@ class ShowDetailsPage extends Component {
         isLoading: false,
       });
     } catch (error) {
+        toast.configure();
+        toast.error(error.message)
       this.setState({ error: error.message });
     }
   }
@@ -116,17 +121,27 @@ class ShowDetailsPage extends Component {
     }
 
     handleSendToFriend = async (e) => {
-        const { uid } = e.target.dataset;
-        
-        const db = getFirestore();
-        const friendsRef = doc(db, 'users', uid);
-        await updateDoc(friendsRef, {
-            preferences: arrayUnion({ from: this.props.name, showId:this.state.id, showName:this.state.name }),
-        });
+        const { uid, name } = e.target.dataset;
+        try {
+               const db = getFirestore();
+               const friendsRef = doc(db, 'users', uid);
+               await updateDoc(friendsRef, {
+                 preferences: arrayUnion({
+                   from: this.props.name,
+                   showId: this.state.id,
+                   showName: this.state.name,
+                 }),
+               });
 
-        this.setState((state) => {
-            return { showFriendsList: !state.showFriendsList }
-        })
+               this.setState((state) => {
+                 return { showFriendsList: !state.showFriendsList };
+               });
+            toast.configure();
+            toast.success(`You have recommended ${name} to watch ${this.state.name}!`)
+         } catch (error) {
+             toast.configure();
+             toast.error(error.message);
+        }
     }
 
   render() {
@@ -154,32 +169,57 @@ class ShowDetailsPage extends Component {
         }}
       >
         <div className={styles.container}>
+          {isLoading && <Loader />}
+          {this.props.loading && <Loader />}
+          {this.props.isAuthenticated && (
+            <>
+              {!this.checkWatchListInclude() && (
+                <BiCameraMovie
+                  onClick={this.handleAddToWatchList}
+                  className={styles.watchlist}
+                />
+              )}
+              {this.checkFavoritesInclude() ? (
+                <AiFillHeart
+                  onClick={this.handleDeleteFromFavorite}
+                  className={styles.favorite}
+                />
+              ) : (
+                <MdFavoriteBorder
+                  onClick={this.handleAddIdToFavorite}
+                  className={styles.favorite}
+                />
+              )}
+
+              <FiSend className={styles.send} onClick={this.showFriends} />
+              {showFriendsList && friends.length > 0 && (
+                <ul className={styles.friendsList}>
+                  {friends.map(({ uid, name }) => (
+                    <li
+                      onClick={this.handleSendToFriend}
+                          data-uid={uid}
+                          data-name={name}
+                      className={styles.friend}
+                      key={uid}
+                    >
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+
           <IoChevronBackCircleOutline
             onClick={this.handleGoBack}
             className={styles.arrow}
-                />
-          {!this.checkWatchListInclude() && <BiCameraMovie onClick={this.handleAddToWatchList} className={styles.watchlist} /> }
-          {this.checkFavoritesInclude() ? (
-            <AiFillHeart
-              onClick={this.handleDeleteFromFavorite}
-              className={styles.favorite}
-            />
-          ) : (
-            <MdFavoriteBorder
-              onClick={this.handleAddIdToFavorite}
-              className={styles.favorite}
-            />
-                    )}
-                
-                <FiSend className={styles.send} onClick={this.showFriends} />
-                {showFriendsList && friends.length > 0 && 
-                    <ul className={styles.friendsList}>
-                    {friends.map(({uid,name}) => 
-                        <li onClick={this.handleSendToFriend} data-uid={uid} className={styles.friend} key={uid}>{name}</li>)}
-                    </ul>
-                }
+          />
 
-                {image ? <img className={styles.image} src={image.original} alt='poster' /> : <div className={styles.preloader}>Loading picture...</div> }
+          {image ? (
+            <img className={styles.image} src={image.original} alt='poster' />
+          ) : (
+            <div className={styles.preloader}>Loading picture...</div>
+          )}
           <div className={styles.info}>
             <p className={styles.name}>{name}</p>
             {genres.length > 0 ? (
@@ -210,10 +250,12 @@ class ShowDetailsPage extends Component {
 
 const mapStateToProps = (state) => ({
   uid: state.auth.uid,
-    favorites: state.auth.favoriteShowsId,
-    friends: state.auth.friends,
-    name: state.auth.displayName,
-    watchlist: state.auth.watchlist,
+  favorites: state.auth.favoriteShowsId,
+  friends: state.auth.friends,
+  name: state.auth.displayName,
+  watchlist: state.auth.watchlist,
+  loading: state.auth.isLoading,
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 const mapDispatchToProps = (dispatch) => ({

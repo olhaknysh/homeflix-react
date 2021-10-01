@@ -1,11 +1,9 @@
 import { todaysShowsSelectors } from '../../redux/todayShows';
-import { useEffect } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import CountriesListItem from './CountriesListItem.jsx';
 import styles from './CountriesList.module.scss';
-import countries from '../../utils/coutries.json';
 import { RiVipCrownLine } from 'react-icons/ri';
-const countriesNames = countries.map((country) => country);
+
 
 const CountriesList = () => {
   const shows = useSelector(todaysShowsSelectors.todayShows);

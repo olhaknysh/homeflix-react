@@ -1,5 +1,7 @@
 import axios from 'axios';
 import updatesActions from './showUpdates-actions.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const updateToday = (page) => async (dispatch) => {
   dispatch(updatesActions.todayUpdatedRequest());
@@ -11,6 +13,8 @@ export const updateToday = (page) => async (dispatch) => {
     const { final, totalPages } = await returnData(data, page);
     dispatch(updatesActions.todayUpdatedSuccess({ final, totalPages }));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(updatesActions.todayUpdatedError(error.message));
   }
 };
@@ -25,6 +29,8 @@ export const updateWeek = (page) => async (dispatch) => {
     const final = await returnData(data, page);
     dispatch(updatesActions.weekUpdatedSuccess(final));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(updatesActions.weekUpdatedError(error.message));
   }
 };
@@ -39,6 +45,8 @@ export const updateMonth = (page) => async (dispatch) => {
     const final = await returnData(data, page);
     dispatch(updatesActions.monthUpdatedSuccess(final));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(updatesActions.monthUpdatedError(error.message));
   }
 };

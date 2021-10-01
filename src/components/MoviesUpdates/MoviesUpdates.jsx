@@ -10,6 +10,7 @@ import {
 } from '../../redux/showUpdates/showUpdates-operations';
 import updatedShows from '../../redux/showUpdates/showUpdates-selectors';
 import MovieList from '../MovieList';
+import Loader from '../Loader';
 
 import Pagination from '../Pagination';
 
@@ -19,7 +20,8 @@ const MoviesUpdates = () => {
   const [updateSelect, setUpdateSelect] = useState('today');
 
   const shows = useSelector(updatedShows.updatedShows);
-  const pagesCount = useSelector(updatedShows.pagesCount);
+    const pagesCount = useSelector(updatedShows.pagesCount);
+    const loading = useSelector(updatedShows.updatedLoading);
   useEffect(() => {
     dispatch(updateToday(1));
   }, []);
@@ -78,7 +80,8 @@ const MoviesUpdates = () => {
         currentPage={page}
         pagesCount={pagesCount}
         handlePageChange={changePage}
-      />
+          />
+          {loading && <Loader/>}
     </div>
   );
 };

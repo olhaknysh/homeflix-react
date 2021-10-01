@@ -21,51 +21,82 @@ const Preferences = ({location}) => {
         await dispatch(deleteFromPreferences(id,userUid))
     }
 
-    const handleAddToWatchList = (e) => {
+    const handleAddToWatchList = async (e) => {
         const { id, name } = e.target.dataset;
         const show = {
             id,
             uid: userUid,
             name
         }
-        dispatch(addFilmToWatchList(show))
+        await dispatch(addFilmToWatchList(show))
+        await dispatch(deleteFromPreferences(id, userUid));
     }
 
     const handleDelete = async (e) => {
-        const { id } = e.target.dataset;
+        const { id } = e.currentTarget.dataset;
         await dispatch(deleteFromPreferences(id, userUid))
     } 
 
     return (
-        <div className={styles.container}>
-            <h3>Preferences</h3>
-            <IconContext.Provider value={{ color: "white", size: '1.4rem', className: "global-class-name" }}>
-                {preferences.length > 0 ?
-                    <ul className={styles.list}>
-                        {preferences.map(({ from, showName, showId }) =>
-                            <li className={styles.item} key={`${showId}+${from}`}>
-                                <p>{from} recommends you to watch
-                        <Link
-                                        className={styles.link}
-                                        to={{
-                                            pathname: `show/${showId}`,
-                                            state: { from: location },
-                                        }}
-                                    >{showName}</Link></p>
-                                <div className={styles.buttons}>
-                                    {favorites.includes(showId) ? <AiFillHeart /> :
-                                        <MdFavoriteBorder className={styles.button} data-id={showId} onClick={handleAddToFavorite} />}
-                                    <BiCameraMovie data-name={showName} data-id={showId} onClick={handleAddToWatchList} className={styles.button} />
-                                    <TiDelete className={styles.button} data-id={showId} onClick={handleDelete} />
-                                </div>
-                            </li>
-                        )}
-                 </ul> :
-                        <p>You haven`t got any recommendations to watch yet</p>}
-               
-            </IconContext.Provider>
-            
-    </div>)
+      <div className={styles.container}>
+        <h3>Preferences</h3>
+        <IconContext.Provider
+          value={{
+            color: 'white',
+            size: '1.4rem',
+            className: 'global-class-name',
+          }}
+        >
+          {preferences.length > 0 ? (
+            <ul className={styles.list}>
+              {preferences.map(({ from, showName, showId }) => (
+                <li className={styles.item} key={`${showId}+${from}`}>
+                  <p>
+                    {from} recommends you to watch
+                    <Link
+                      className={styles.link}
+                      to={{
+                        pathname: `show/${showId}`,
+                        state: { from: location },
+                      }}
+                    >
+                      {showName}
+                    </Link>
+                  </p>
+                  <div className={styles.buttons}>
+                    {favorites.includes(showId) ? (
+                      <AiFillHeart />
+                    ) : (
+                      <MdFavoriteBorder
+                        className={styles.button}
+                        data-id={showId}
+                        onClick={handleAddToFavorite}
+                      />
+                    )}
+                    <BiCameraMovie
+                      data-name={showName}
+                      data-id={showId}
+                      onClick={handleAddToWatchList}
+                      className={styles.button}
+                    />
+                    <button
+                      type='button'
+                      data-id={showId}
+                      onClick={handleDelete}
+                      className={styles.delete}
+                    >
+                      <TiDelete />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>You haven`t got any recommendations to watch yet</p>
+          )}
+        </IconContext.Provider>
+      </div>
+    );
 }
 
 export default withRouter(Preferences);

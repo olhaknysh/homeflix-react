@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { todaysShowsActions } from './index';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const fetchTodaysShows = (country, date) => async (dispatch) => {
   dispatch(todaysShowsActions.fetchTodaysShowsRequest());
@@ -11,6 +13,8 @@ const fetchTodaysShows = (country, date) => async (dispatch) => {
 
     dispatch(todaysShowsActions.fetchTodaysShowsSuccess(data));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(todaysShowsActions.fetchTodaysShowsFailure(error.message));
   }
 };

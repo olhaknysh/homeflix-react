@@ -76,7 +76,7 @@ const watchlist = createReducer([], {
     payload,
   ],
   [authActions.deleteShowToWatchListSuccess]: (state, { payload }) =>
-    state.filter((item) => item.id !== Number(payload)),
+    state.filter((item) => item.id !== payload),
   [authActions.logoutSuccess]: () => [],
 });
 

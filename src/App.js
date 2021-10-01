@@ -7,6 +7,7 @@ import { getUserUid } from './redux/auth/auth-selectors';
 import AppBar from './components/AppBar';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
+import Loader from './components/Loader';
 
 import routes from './utils/routes';
 
@@ -50,10 +51,11 @@ const App = () => {
   return (
     <div className='container'>
       <AppBar />
-      <Suspense fallback={<p>Loading</p>}>
+      <Suspense fallback={<Loader />}>
         <Switch>
           <Route exact path={routes.home} component={HomePage} />
           <Route path={routes.showDetails} component={ShowDetailsPage} />
+          <Route path={routes.search} component={SearchPage} />
           <PublicRoute
             restricted
             path={routes.register}
@@ -73,9 +75,6 @@ const App = () => {
           </PrivateRoute>
           <PrivateRoute redirectTo={routes.login} path={routes.favorites}>
             <FavoritesPage />
-          </PrivateRoute>
-          <PrivateRoute redirectTo={routes.login} path={routes.search}>
-            <SearchPage />
           </PrivateRoute>
         </Switch>
       </Suspense>

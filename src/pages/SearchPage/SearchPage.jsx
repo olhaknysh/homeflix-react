@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { search } from '../../redux/movieSearch/movieSearch-operations';
 import searchSelectors from '../../redux/movieSearch/movieSearch-selectors.js';
 import { HiOutlineEmojiHappy } from 'react-icons/hi';
+import Loader from '../../components/Loader'
 
 const SearchPage = () => {
   const dispatch = useDispatch();
@@ -15,10 +16,12 @@ const SearchPage = () => {
     e.preventDefault();
     dispatch(search(searchMovie));
   };
-  const shows = useSelector(searchSelectors.movies);
+    const shows = useSelector(searchSelectors.movies);
+    const loading  = useSelector(searchSelectors.loading)
   const handleInputChange = (e) => setSearchMovie(e.target.value);
   return (
-    <div className={styles.container}>
+      <div className={styles.container}>
+          {loading && <Loader/>}
       <form onSubmit={handleSubmit} className={styles.form} autoComplete='off'>
         <input
           value={searchMovie}

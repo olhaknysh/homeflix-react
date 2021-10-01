@@ -2,8 +2,8 @@ import './SplashScreen.scss'
 
 
 const SplashScreen = () => {
-    return <div class="splash-wrapper">
-        <div class="splash">
+    return <div className="splash-wrapper">
+        <div className="splash">
         </div>
     </div>
 }

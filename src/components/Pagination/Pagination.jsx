@@ -2,13 +2,13 @@ import { RiArrowLeftSLine } from 'react-icons/ri';
 import { RiArrowRightSLine } from 'react-icons/ri';
 import styles from './Pagination.module.scss';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import updatedShows from '../../redux/showUpdates/showUpdates-selectors';
 
 const Pagination = ({ currentPage, pagesCount, handlePageChange }) => {
   const [page, setPage] = useState(currentPage);
   const [totalPages, setTotalPages] = useState([]);
-  const [filteredPaged, setFilteredPages] = useState([]);
+    const [filteredPaged, setFilteredPages] = useState([]);
+
+    
 
   useEffect(() => {
     setPage(currentPage);

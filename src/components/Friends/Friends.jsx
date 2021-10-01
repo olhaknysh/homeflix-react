@@ -1,7 +1,6 @@
 import styles from './Friends.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-// import _ from 'lodash';
 import FriendsList from './FriendsList';
 import Select from 'react-select';
 import { collection, getDocs } from 'firebase/firestore';

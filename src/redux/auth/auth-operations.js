@@ -12,6 +12,8 @@ import {
 } from 'firebase/firestore';
 import { getDocs } from 'firebase/firestore';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const login =
   ({ email, password }) =>
@@ -42,6 +44,10 @@ export const login =
       } else {
         console.log('No such document!');
       }
+
+      toast.configure();
+      toast.success(`Welcome back, ${displayName}!`);
+
       dispatch(
         authActions.loginSuccess({
           mail,
@@ -55,6 +61,8 @@ export const login =
         })
       );
     } catch (error) {
+      toast.configure();
+      toast.error(error.message);
       dispatch(authActions.loginError(error.message));
     }
   };
@@ -91,6 +99,9 @@ export const register =
         displayName = userName;
       }
 
+      toast.configure();
+      toast.success(`Welcome to Homeflix, ${displayName}!`);
+
       dispatch(
         authActions.registerSuccess({
           mail,
@@ -102,6 +113,8 @@ export const register =
         })
       );
     } catch (error) {
+      toast.configure();
+      toast.error(error.message);
       dispatch(authActions.registerError(error.message));
     }
   };
@@ -112,8 +125,13 @@ export const logout = () => async (dispatch) => {
   try {
     await app.auth().signOut();
     localStorage.removeItem('uid');
+
+    toast.configure();
+    toast.success('Bye-bye!');
     dispatch(authActions.logoutSuccess());
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(authActions.logoutError(error.message));
   }
 };
@@ -158,6 +176,8 @@ export const getCurrentUser = () => async (dispatch, getState) => {
       }
     });
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(authActions.getCurrentUserError(error.message));
   }
 };
@@ -168,8 +188,6 @@ export const googleLogin = () => async (dispatch) => {
   const auth = getAuth();
   signInWithPopup(auth, provider)
     .then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
       const user = result.user;
       const { displayName, photoURL, email: mail, uid } = user;
       const db = getFirestore();
@@ -183,6 +201,9 @@ export const googleLogin = () => async (dispatch) => {
         preferences: [],
         watchList: [],
       });
+
+      toast.configure();
+      toast.success(`Welcome to Homeflix, ${displayName}!`);
 
       dispatch(
         authActions.loginSuccess({
@@ -198,6 +219,8 @@ export const googleLogin = () => async (dispatch) => {
       );
     })
     .catch((error) => {
+      toast.configure();
+      toast.error(error.message);
       dispatch(authActions.loginError(error.message));
     });
 };
@@ -214,6 +237,8 @@ export const getFavoriteShows = (ids) => async (dispatch) => {
     );
     dispatch(authActions.favoriteShowsSuccess(result));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(authActions.favoriteShowsError(error.message));
   }
 };
@@ -228,8 +253,13 @@ export const addIdToFavorite = (id, uid) => async (dispatch) => {
       favorites: arrayUnion(id),
     });
 
+    toast.configure();
+    toast.success('You have added this show to favorites!');
+
     dispatch(authActions.favoriteShowsIdSuccess(id));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(authActions.favoriteShowsIdError(error.message));
   }
 };
@@ -244,8 +274,13 @@ export const deleteIdFromFavorite = (id, uid) => async (dispatch) => {
       favorites: arrayRemove(id),
     });
 
+    toast.configure();
+    toast.warn('You have removed this show from favorites!');
+
     dispatch(authActions.favoriteShowsIdDeleteSuccess(id));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(authActions.favoriteShowsIdDeleteError(error.message));
   }
 };
@@ -269,8 +304,13 @@ export const addNewFriend =
       await updateDoc(friendsRef, {
         friends: arrayUnion({ name: displayName, uid: uid }),
       });
+
+      toast.configure();
+      toast.success(`New friend: ${label}!`);
       dispatch(authActions.addFriendSuccess({ name: label, uid: value }));
     } catch (error) {
+      toast.configure();
+      toast.error(error.message);
       dispatch(authActions.addFriendError(error.message));
     }
   };
@@ -296,17 +336,19 @@ export const deleteFromFriends = (friendUid) => async (dispatch, getState) => {
     await updateDoc(friendsRef, {
       friends: friendSnap.data().friends.filter((friend) => friend.uid !== uid),
     });
+
+    toast.configure();
+    toast.warn('-1 friend');
     dispatch(authActions.deleteFriendSuccess(friendUid));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(authActions.deleteFriendError(error.message));
   }
 };
 
 export const deleteFromPreferences = (id, uid) => async (dispatch) => {
   dispatch(authActions.deleteFromPreferencesRequest());
-
-  console.log(id, 'id');
-  console.log(uid, 'uid');
 
   try {
     const db = getFirestore();
@@ -319,6 +361,8 @@ export const deleteFromPreferences = (id, uid) => async (dispatch) => {
     });
     dispatch(authActions.deleteFromPreferencesSuccess(id));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(authActions.deleteFromPreferencesError(error.message));
   }
 };
@@ -335,8 +379,13 @@ export const addFilmToWatchList =
       await updateDoc(userRef, {
         watchList: arrayUnion({ name, id }),
       });
+
+      toast.configure();
+      toast.success(`Not forget to watch ${name}!`);
       dispatch(authActions.addShowToWatchListSuccess({ id, name }));
     } catch (error) {
+      toast.configure();
+      toast.error(error.message);
       dispatch(authActions.addShowToWatchListError(error.message));
     }
   };
@@ -345,8 +394,6 @@ export const deleteFilmFromWatchList =
   ({ id, uid }) =>
   async (dispatch) => {
     dispatch(authActions.deleteShowToWatchListRequest());
-    console.log(id);
-    console.log(uid);
 
     try {
       const db = getFirestore();
@@ -354,13 +401,16 @@ export const deleteFilmFromWatchList =
       const userSnap = await getDoc(userRef);
 
       await updateDoc(userRef, {
-        watchList: userSnap
-          .data()
-          .watchList.filter((show) => show.id !== Number(id)),
+        watchList: userSnap.data().watchList.filter((show) => show.id !== id),
       });
+
+      toast.configure();
+      toast.warn('Not eager to watch');
 
       dispatch(authActions.deleteShowToWatchListSuccess(id));
     } catch (error) {
+      toast.configure();
+      toast.error(error.message);
       dispatch(authActions.deleteShowToWatchListError(error.message));
     }
   };

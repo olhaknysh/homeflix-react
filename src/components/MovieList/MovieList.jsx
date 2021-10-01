@@ -2,7 +2,6 @@ import MoviesListItem from './MoviesListItem';
 import styles from './MovieList.module.scss';
 
 const MovieList = ({ shows }) => {
-  console.log(shows);
   return (
     <ul className={styles.container}>
       {shows &&

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import searchActions from './movieSearch-actions';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const search = (word) => async (dispatch) => {
   dispatch(searchActions.movieSearchRequest());
@@ -7,9 +9,16 @@ export const search = (word) => async (dispatch) => {
     const { data } = await axios.get(
       `https://api.tvmaze.com/search/shows?q=${word}`
     );
+
+    if (data.length === 0) {
+      toast.configure();
+      toast.info('Nothing was found on your request ');
+    }
     const result = data.map((item) => item.show);
     dispatch(searchActions.movieSearchSuccess(result));
   } catch (error) {
+    toast.configure();
+    toast.error(error.message);
     dispatch(searchActions.movieSearchError(error.message));
   }
 };

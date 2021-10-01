@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { googleLogin } from '../../redux/auth/auth-operations';
 import Button from '../../components/Button';
 import { ImGoogle } from 'react-icons/im';
@@ -8,6 +8,10 @@ import { Link } from 'react-router-dom';
 import routes from '../../utils/routes';
 import styles from './LoginPage.module.scss';
 import { useState } from 'react';
+import {
+  isLoading
+} from '../../redux/auth/auth-selectors';
+import Loader from '../../components/Loader';
 
 const initialValue = {
   email: '',
@@ -18,7 +22,9 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const handleGoogleLogin = () => dispatch(googleLogin());
   const [state, setState] = useState(initialValue);
-  const { email, password } = state;
+    const { email, password } = state;
+    
+     const loading = useSelector(isLoading);
 
   const handleInputChange = (e) => {
     setState((prevState) => ({
@@ -41,6 +47,7 @@ const LoginPage = () => {
 
   return (
     <div className={styles.container}>
+      {loading && <Loader />}
       <IconContext.Provider
         value={{ color: 'white', className: 'global-class-name' }}
       >
