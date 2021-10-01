@@ -1,9 +1,10 @@
+import { useSelector } from 'react-redux';
 import { todaysShowsSelectors } from '../../redux/todayShows';
-import {  useSelector } from 'react-redux';
+
 import CountriesListItem from './CountriesListItem.jsx';
-import styles from './CountriesList.module.scss';
 import { RiVipCrownLine } from 'react-icons/ri';
 
+import styles from './CountriesList.module.scss';
 
 const CountriesList = () => {
   const shows = useSelector(todaysShowsSelectors.todayShows);

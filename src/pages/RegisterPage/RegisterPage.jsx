@@ -1,15 +1,17 @@
-import { useDispatch,useSelector } from 'react-redux';
-import { googleLogin } from '../../redux/auth/auth-operations';
+import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { IconContext } from 'react-icons';
+import { googleLogin, register } from '../../redux/auth/auth-operations';
+import { isLoading } from '../../redux/auth/auth-selectors';
+
+import Loader from '../../components/Loader';
 import Button from '../../components/Button';
 import { ImGoogle } from 'react-icons/im';
-import { IconContext } from 'react-icons';
-import { register } from '../../redux/auth/auth-operations';
-import { Link } from 'react-router-dom';
+
 import routes from '../../utils/routes';
 import styles from './RegisterPage.module.scss';
-import { useState } from 'react';
-import { isLoading } from '../../redux/auth/auth-selectors';
-import Loader from '../../components/Loader';
+
 
 const initialValue = {
   email: '',
@@ -17,11 +19,20 @@ const initialValue = {
   userName: '',
 };
 
+
 const RegisterPage = () => {
   const dispatch = useDispatch();
+  const inputRef = useRef(null);
   const [state, setState] = useState(initialValue);
-    const { email, password, userName } = state;
-     const loading = useSelector(isLoading);
+  const { email, password, userName } = state;
+    
+   useEffect(() => {
+       inputRef.current.focus();
+     }, []);
+
+  const loading = useSelector(isLoading);
+    
+  const handleGoogleLogin = () => dispatch(googleLogin());
 
   const handleInputChange = (e) => {
     setState((prevState) => ({
@@ -32,18 +43,14 @@ const RegisterPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const user = {
       email,
       password,
       userName,
     };
-
     dispatch(register(user));
     setState(initialValue);
   };
-
-  const handleGoogleLogin = () => dispatch(googleLogin());
 
   return (
     <div className={styles.container}>
@@ -68,6 +75,7 @@ const RegisterPage = () => {
             placeholder='Enter you name'
             onChange={handleInputChange}
             className={styles.input}
+            ref={inputRef}
           />
         </div>
         <div className={styles.field}>

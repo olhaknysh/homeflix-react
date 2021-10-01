@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import Select from 'react-select';
-import styles from './CountryForm.module.scss';
-
-import countries from '../../utils/coutries.json';
-
-import { todaysShowsOperations } from '../../redux/todayShows';
 import { useDispatch } from 'react-redux';
+import { todaysShowsOperations } from '../../redux/todayShows';
+
+import Select from 'react-select';
+import countries from '../../utils/coutries.json';
+import styles from './CountryForm.module.scss';
 
 const countrisNames = countries.map((country) => country);
 

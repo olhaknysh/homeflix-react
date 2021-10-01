@@ -1,8 +1,7 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getCurrentUser } from './redux/auth/auth-operations';
-import { getUserUid } from './redux/auth/auth-selectors';
 
 import AppBar from './components/AppBar';
 import PrivateRoute from './components/PrivateRoute';
@@ -40,11 +39,9 @@ const ShowDetailsPage = lazy(() =>
 );
 
 const App = () => {
-  const userUid = useSelector(getUserUid);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('nooo');
     dispatch(getCurrentUser());
   }, []);
 

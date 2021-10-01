@@ -1,6 +1,3 @@
-import Button from '../Button';
-import styles from './MoviesUpdates.module.scss';
-import { IoArrowRedoCircleOutline } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,19 +6,23 @@ import {
   updateMonth,
 } from '../../redux/showUpdates/showUpdates-operations';
 import updatedShows from '../../redux/showUpdates/showUpdates-selectors';
+
+import { IoArrowRedoCircleOutline } from 'react-icons/io5';
+import Button from '../Button';
 import MovieList from '../MovieList';
 import Loader from '../Loader';
-
 import Pagination from '../Pagination';
 
 const MoviesUpdates = () => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    
   const [page, setPage] = useState(1);
-  const [updateSelect, setUpdateSelect] = useState('today');
+    const [updateSelect, setUpdateSelect] = useState('today');
 
   const shows = useSelector(updatedShows.updatedShows);
     const pagesCount = useSelector(updatedShows.pagesCount);
     const loading = useSelector(updatedShows.updatedLoading);
+
   useEffect(() => {
     dispatch(updateToday(1));
   }, []);
@@ -64,13 +65,13 @@ const MoviesUpdates = () => {
       }
     }
   };
-
+    
   return (
-    <div className={styles.container}>
+    <div >
       <h2>
         New releases <IoArrowRedoCircleOutline />
       </h2>
-      <div className={styles.buttons}>
+      <div >
         <Button handleEvent={handleTodayUpdate} text='today' />
         <Button handleEvent={handleWeekUpdate} text='last week' />
         <Button handleEvent={handleMonthUpdate} text='last month' />
@@ -80,8 +81,8 @@ const MoviesUpdates = () => {
         currentPage={page}
         pagesCount={pagesCount}
         handlePageChange={changePage}
-          />
-          {loading && <Loader/>}
+      />
+      {loading && <Loader />}
     </div>
   );
 };

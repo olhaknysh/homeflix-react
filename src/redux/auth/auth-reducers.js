@@ -63,7 +63,7 @@ const preferences = createReducer([], {
   [authActions.loginSuccess]: (_, { payload }) => payload.preferences,
   [authActions.registerSuccess]: (_, { payload }) => payload.preferences,
   [authActions.deleteFromPreferencesSuccess]: (state, { payload }) =>
-    state.filter((item) => item.showId !== Number(payload)),
+    state.filter((item) => Number(item.showId) !== Number(payload)),
   [authActions.logoutSuccess]: () => [],
 });
 
@@ -76,7 +76,7 @@ const watchlist = createReducer([], {
     payload,
   ],
   [authActions.deleteShowToWatchListSuccess]: (state, { payload }) =>
-    state.filter((item) => item.id !== payload),
+    state.filter((item) => Number(item.id) !== Number(payload)),
   [authActions.logoutSuccess]: () => [],
 });
 

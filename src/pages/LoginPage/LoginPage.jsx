@@ -1,30 +1,38 @@
-import { useDispatch,useSelector } from 'react-redux';
-import { googleLogin } from '../../redux/auth/auth-operations';
+import { useState,useRef,useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { IconContext } from 'react-icons';
+import { googleLogin, login } from '../../redux/auth/auth-operations';
+import { isLoading } from '../../redux/auth/auth-selectors';
+
+import Loader from '../../components/Loader';
 import Button from '../../components/Button';
 import { ImGoogle } from 'react-icons/im';
-import { IconContext } from 'react-icons';
-import { login } from '../../redux/auth/auth-operations';
-import { Link } from 'react-router-dom';
+
 import routes from '../../utils/routes';
 import styles from './LoginPage.module.scss';
-import { useState } from 'react';
-import {
-  isLoading
-} from '../../redux/auth/auth-selectors';
-import Loader from '../../components/Loader';
+
 
 const initialValue = {
   email: '',
   password: '',
 };
 
+
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const handleGoogleLogin = () => dispatch(googleLogin());
+  const inputRef = useRef(null);
   const [state, setState] = useState(initialValue);
-    const { email, password } = state;
+  const { email, password } = state;
+
+  useEffect(() => {
+      inputRef.current.focus();
+    }, []);
+
+   
+  const loading = useSelector(isLoading);
     
-     const loading = useSelector(isLoading);
+  const handleGoogleLogin = () => dispatch(googleLogin());
 
   const handleInputChange = (e) => {
     setState((prevState) => ({
@@ -35,12 +43,10 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const user = {
       email,
       password,
     };
-
     dispatch(login(user));
     setState(initialValue);
   };
@@ -68,6 +74,7 @@ const LoginPage = () => {
             placeholder='Enter you email'
             onChange={handleInputChange}
             className={styles.input}
+            ref={inputRef}
           />
         </div>
         <div className={styles.field}>

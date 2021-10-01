@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { IconContext } from 'react-icons';
 
 import { AiFillHome, AiOutlineUser } from 'react-icons/ai';
 import { FiSearch } from 'react-icons/fi';
 import { MdFavoriteBorder } from 'react-icons/md';
-import styles from './Navigation.module.scss';
-import { IconContext } from 'react-icons';
+
 import routes from '../../utils/routes';
+import styles from './Navigation.module.scss';
 
 const Navigation = () => (
   <div className={styles.container}>

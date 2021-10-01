@@ -1,6 +1,7 @@
-import styles from './MovieListItem.module.scss';
-import { FaQuestionCircle } from 'react-icons/fa';
 import { Link, withRouter } from 'react-router-dom';
+import { FaQuestionCircle } from 'react-icons/fa';
+import styles from './MovieListItem.module.scss';
+
 
 const MovieListItem = ({ id, genres, image, name, language, location }) => {
   return (
@@ -9,7 +10,6 @@ const MovieListItem = ({ id, genres, image, name, language, location }) => {
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0)),url(${image})`,
       }}
       className={styles.item}
-      data-id={id}
     >
       <Link
         className={styles.link}

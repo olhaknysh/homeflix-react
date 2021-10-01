@@ -1,16 +1,16 @@
 .list {
+  padding: 0;
+
   list-style: none;
-  border: 1px solid;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
-  margin: 0;
-  padding: 0;
 }
 
 .item {
   display: flex;
   justify-content: space-between;
   padding: 10px;
+
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 

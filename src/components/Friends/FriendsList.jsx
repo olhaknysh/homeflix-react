@@ -1,21 +1,22 @@
-import { useSelector ,useDispatch} from 'react-redux';
-import { getUsersFriends } from '../../redux/auth/auth-selectors';
+import { IconContext } from 'react-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteFromFriends } from '../../redux/auth/auth-operations';
+import { getUsersFriends, isLoading } from '../../redux/auth/auth-selectors';
+
+import { TiDelete } from 'react-icons/ti';
+import { FaUserFriends } from 'react-icons/fa';
 import styles from './FriendsList.module.scss'
-import { TiDelete } from 'react-icons/ti'
-import { IconContext } from "react-icons";
-import { deleteFromFriends } from '../../redux/auth/auth-operations'
-import { FaUserFriends } from 'react-icons/fa'
-import { isLoading } from '../../redux/auth/auth-selectors'
-import Loader from '../Loader'
 
 const FriendsList = () => {
     const dispatch = useDispatch()
+
     const friends = useSelector(getUsersFriends)
-    const loading = useSelector(isLoading)
+
     const handleDelete = (e) => {
         const { uid } = e.currentTarget.dataset;
         dispatch(deleteFromFriends(uid))
     }
+    
     return (
       <IconContext.Provider
         value={{

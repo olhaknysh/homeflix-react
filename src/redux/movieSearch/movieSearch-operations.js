@@ -1,7 +1,8 @@
 import axios from 'axios';
-import searchActions from './movieSearch-actions';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import searchActions from './movieSearch-actions';
 
 export const search = (word) => async (dispatch) => {
   dispatch(searchActions.movieSearchRequest());

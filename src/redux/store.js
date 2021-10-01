@@ -32,9 +32,9 @@ const userConfig = {
 
 export const store = configureStore({
   reducer: {
+    auth: persistReducer(userConfig, userReducer),
     todayShows: todayShowsReducer,
     updatedShows: updatedShowsReducer,
-    auth: persistReducer(userConfig, userReducer),
     movieSearch: movieSearchReducer,
   },
   middleware,

@@ -1,5 +1,4 @@
-import authActions from './auth-actions';
-import app from '../../firebase';
+import axios from 'axios';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore, getDoc } from 'firebase/firestore';
 import {
@@ -11,9 +10,11 @@ import {
   arrayRemove,
 } from 'firebase/firestore';
 import { getDocs } from 'firebase/firestore';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import authActions from './auth-actions';
+import app from '../../firebase';
 
 export const login =
   ({ email, password }) =>
@@ -186,11 +187,27 @@ export const googleLogin = () => async (dispatch) => {
   dispatch(authActions.loginRequest());
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const user = result.user;
-      const { displayName, photoURL, email: mail, uid } = user;
-      const db = getFirestore();
+
+  try {
+    const result = await signInWithPopup(auth, provider);
+
+    const user = result.user;
+    const { displayName, photoURL, email: mail, uid } = user;
+    const db = getFirestore();
+    const docRef = doc(db, 'users', uid);
+    const docSnap = await getDoc(docRef);
+
+    let favorites = [];
+    let friends = [];
+    let preferences = [];
+    let watchList = [];
+
+    if (docSnap.exists()) {
+      favorites = docSnap.data().favorites;
+      friends = docSnap.data().friends;
+      preferences = docSnap.data().preferences;
+      watchList = docSnap.data().watchList;
+    } else {
       setDoc(doc(db, 'users', `${uid}`), {
         email: mail,
         name: displayName,
@@ -201,28 +218,28 @@ export const googleLogin = () => async (dispatch) => {
         preferences: [],
         watchList: [],
       });
+    }
 
-      toast.configure();
-      toast.success(`Welcome to Homeflix, ${displayName}!`);
+    toast.configure();
+    toast.success(`Welcome to Homeflix, ${displayName}!`);
 
-      dispatch(
-        authActions.loginSuccess({
-          displayName,
-          photoURL,
-          mail,
-          uid,
-          favorites: [],
-          friends: [],
-          preferences: [],
-          watchList: [],
-        })
-      );
-    })
-    .catch((error) => {
-      toast.configure();
-      toast.error(error.message);
-      dispatch(authActions.loginError(error.message));
-    });
+    dispatch(
+      authActions.loginSuccess({
+        displayName,
+        photoURL,
+        mail,
+        uid,
+        favorites,
+        friends,
+        preferences,
+        watchList,
+      })
+    );
+  } catch (error) {
+    toast.configure();
+    toast.error(error.message);
+    dispatch(authActions.loginError(error.message));
+  }
 };
 
 export const getFavoriteShows = (ids) => async (dispatch) => {
@@ -337,8 +354,6 @@ export const deleteFromFriends = (friendUid) => async (dispatch, getState) => {
       friends: friendSnap.data().friends.filter((friend) => friend.uid !== uid),
     });
 
-    toast.configure();
-    toast.warn('-1 friend');
     dispatch(authActions.deleteFriendSuccess(friendUid));
   } catch (error) {
     toast.configure();
@@ -357,7 +372,7 @@ export const deleteFromPreferences = (id, uid) => async (dispatch) => {
     await updateDoc(userRef, {
       preferences: userSnap
         .data()
-        .preferences.filter((show) => show.showId !== Number(id)),
+        .preferences.filter((show) => Number(show.showId) !== Number(id)),
     });
     dispatch(authActions.deleteFromPreferencesSuccess(id));
   } catch (error) {
@@ -377,7 +392,7 @@ export const addFilmToWatchList =
       const userRef = doc(db, 'users', uid);
 
       await updateDoc(userRef, {
-        watchList: arrayUnion({ name, id }),
+        watchList: arrayUnion({ name, id: Number(id) }),
       });
 
       toast.configure();
@@ -401,11 +416,10 @@ export const deleteFilmFromWatchList =
       const userSnap = await getDoc(userRef);
 
       await updateDoc(userRef, {
-        watchList: userSnap.data().watchList.filter((show) => show.id !== id),
+        watchList: userSnap
+          .data()
+          .watchList.filter((show) => Number(show.id) !== Number(id)),
       });
-
-      toast.configure();
-      toast.warn('Not eager to watch');
 
       dispatch(authActions.deleteShowToWatchListSuccess(id));
     } catch (error) {

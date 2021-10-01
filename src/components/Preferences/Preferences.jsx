@@ -1,28 +1,41 @@
-import styles from './Preferences.module.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserPreferences, getUserUid, favoriteShowsId } from '../../redux/auth/auth-selectors'
-import { IconContext } from "react-icons";
-import { MdFavoriteBorder } from 'react-icons/md';
-import { TiDelete } from 'react-icons/ti'
-import { BiCameraMovie } from 'react-icons/bi'
 import { Link, withRouter } from 'react-router-dom';
-import { addIdToFavorite, deleteFromPreferences, addFilmToWatchList } from '../../redux/auth/auth-operations'
+import { IconContext } from 'react-icons';
+import {
+  addIdToFavorite,
+  deleteFromPreferences,
+  addFilmToWatchList,
+} from '../../redux/auth/auth-operations';
+import {
+  getUserPreferences,
+  getUserUid,
+  favoriteShowsId,
+} from '../../redux/auth/auth-selectors';
+
+import { MdFavoriteBorder } from 'react-icons/md';
+import { TiDelete } from 'react-icons/ti';
+import { BiCameraMovie } from 'react-icons/bi';
 import { AiFillHeart } from 'react-icons/ai';
 
-const Preferences = ({location}) => {
+import styles from './Preferences.module.scss'
+
+
+const Preferences = ({ location }) => {
+    const dispatch = useDispatch();
+    
     const preferences = useSelector(getUserPreferences);
     const userUid = useSelector(getUserUid);
     const favorites = useSelector(favoriteShowsId)
-    const dispatch = useDispatch()
+ 
 
     const handleAddToFavorite = async (e) => {
-        const { id } = e.target.dataset;
+        const { id } = e.currentTarget.dataset;
         await dispatch(addIdToFavorite(id, userUid))
         await dispatch(deleteFromPreferences(id,userUid))
     }
 
     const handleAddToWatchList = async (e) => {
-        const { id, name } = e.target.dataset;
+        const { id, name } = e.currentTarget.dataset;
         const show = {
             id,
             uid: userUid,
@@ -65,25 +78,33 @@ const Preferences = ({location}) => {
                   </p>
                   <div className={styles.buttons}>
                     {favorites.includes(showId) ? (
-                      <AiFillHeart />
+                      <button type='button' className={styles.button}>
+                        <AiFillHeart />
+                      </button>
                     ) : (
-                      <MdFavoriteBorder
+                      <button
+                        type='button'
                         className={styles.button}
                         data-id={showId}
                         onClick={handleAddToFavorite}
-                      />
+                      >
+                        <MdFavoriteBorder />
+                      </button>
                     )}
-                    <BiCameraMovie
+                    <button
+                      type='button'
                       data-name={showName}
                       data-id={showId}
                       onClick={handleAddToWatchList}
                       className={styles.button}
-                    />
+                    >
+                      <BiCameraMovie />
+                    </button>
                     <button
                       type='button'
                       data-id={showId}
                       onClick={handleDelete}
-                      className={styles.delete}
+                      className={styles.button}
                     >
                       <TiDelete />
                     </button>

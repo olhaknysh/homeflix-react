@@ -1,32 +1,23 @@
-import React, { Component, Suspense, lazy } from 'react';
-import { Route, NavLink, Switch } from 'react-router-dom';
-import routes from '../../utils/routes';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
-import { FaQuestionCircle } from 'react-icons/fa';
-import styles from './ShowDetailsPage.module.scss';
 import ReactHtmlParser from 'react-html-parser';
+
 import { IoChevronBackCircleOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
-import { MdFavoriteBorder } from 'react-icons/md';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { getFirestore } from 'firebase/firestore';
-import { connect } from 'react-redux';
-import { AiFillHeart } from 'react-icons/ai';
-import todayShowsSelectors from '../../redux/todayShows/todayShows-selectors';
-import {
-  addIdToFavorite,
-    deleteIdFromFavorite, addFilmToWatchList
-} from '../../redux/auth/auth-operations';
-import { FiSend } from 'react-icons/fi';
-import NoPoster from '../../utils/images/no-poster.png'
-import { BiCameraMovie } from 'react-icons/bi'
-import Loader from '../../components/Loader'
+import { FaQuestionCircle } from 'react-icons/fa';
+import Loader from '../../components/Loader';
+
+import routes from '../../utils/routes';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NoPoster from '../../utils/images/no-poster.png';
+import styles from './ShowDetailsPage.module.scss';
+import ShowDetailsButtons from './ShowDetailsButtons'
 
 class ShowDetailsPage extends Component {
-  state = {
-    id: null,
+    state = {
+      id:null,
     name: null,
     genres: [],
     image: '',
@@ -37,7 +28,6 @@ class ShowDetailsPage extends Component {
       language: null,
     showFriendsList:false,
 
-    error: '',
     isLoading: false,
   };
 
@@ -46,8 +36,8 @@ class ShowDetailsPage extends Component {
       this.setState({ isLoading: true });
       const { showId } = this.props.match.params;
       const {
-        data: {
-          id,
+          data: {
+            id,
           name,
           genres,
           image,
@@ -61,10 +51,10 @@ class ShowDetailsPage extends Component {
         if (!image) {
             this.setState({image:NoPoster})
         } else {
-            this.setState({ image })
+            this.setState({ image:image.original})
         }
-      this.setState({
-        id,
+        this.setState({
+          id,
         name,
         genres,
         officialSite,
@@ -83,70 +73,14 @@ class ShowDetailsPage extends Component {
 
   handleGoBack = () => {
     const { location, history } = this.props;
-
     history.push({
       pathname: location?.state?.from.pathname || routes.home,
     });
   };
 
-  checkFavoritesInclude = () => {
-    return this.props.favorites.some((item) => item === this.state.id);
-  };
-    
-    checkWatchListInclude = () => {
-        return this.props.watchlist.some((item) => item.id === this.state.id);
-    };
-
-  handleAddIdToFavorite = () => {
-    this.props.onAddIdToFavorite(this.state.id, this.props.uid);
-  };
-
-  handleDeleteFromFavorite = () => {
-    this.props.onDeleteFromFavorite(this.state.id, this.props.uid);
-  };
-    
-    handleAddToWatchList = () => {
-        const show = {
-            id: this.state.id,
-            uid: this.props.uid,
-            name:this.state.name
-        }
-        this.props.onAddShowToWatchList(show)
-    }
-    
-    showFriends = () => {
-        this.setState((state) => {
-            return { showFriendsList: !state.showFriendsList }
-        })
-    }
-
-    handleSendToFriend = async (e) => {
-        const { uid, name } = e.target.dataset;
-        try {
-               const db = getFirestore();
-               const friendsRef = doc(db, 'users', uid);
-               await updateDoc(friendsRef, {
-                 preferences: arrayUnion({
-                   from: this.props.name,
-                   showId: this.state.id,
-                   showName: this.state.name,
-                 }),
-               });
-
-               this.setState((state) => {
-                 return { showFriendsList: !state.showFriendsList };
-               });
-            toast.configure();
-            toast.success(`You have recommended ${name} to watch ${this.state.name}!`)
-         } catch (error) {
-             toast.configure();
-             toast.error(error.message);
-        }
-    }
-
   render() {
-    const {
-      id,
+      const {
+        id,
       name,
       genres,
       image,
@@ -155,11 +89,8 @@ class ShowDetailsPage extends Component {
       status,
       summary,
       language,
-      error,
         isLoading,
-        showFriendsList
     } = this.state;
-      const { friends } = this.props;
     return (
       <IconContext.Provider
         value={{
@@ -171,55 +102,20 @@ class ShowDetailsPage extends Component {
         <div className={styles.container}>
           {isLoading && <Loader />}
           {this.props.loading && <Loader />}
-          {this.props.isAuthenticated && (
-            <>
-              {!this.checkWatchListInclude() && (
-                <BiCameraMovie
-                  onClick={this.handleAddToWatchList}
-                  className={styles.watchlist}
-                />
-              )}
-              {this.checkFavoritesInclude() ? (
-                <AiFillHeart
-                  onClick={this.handleDeleteFromFavorite}
-                  className={styles.favorite}
-                />
-              ) : (
-                <MdFavoriteBorder
-                  onClick={this.handleAddIdToFavorite}
-                  className={styles.favorite}
-                />
-              )}
-
-              <FiSend className={styles.send} onClick={this.showFriends} />
-              {showFriendsList && friends.length > 0 && (
-                <ul className={styles.friendsList}>
-                  {friends.map(({ uid, name }) => (
-                    <li
-                      onClick={this.handleSendToFriend}
-                          data-uid={uid}
-                          data-name={name}
-                      className={styles.friend}
-                      key={uid}
-                    >
-                      {name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          )}
-
+                
+          {this.props.isAuthenticated && <ShowDetailsButtons id={id} showName={name} />}
+          
           <IoChevronBackCircleOutline
             onClick={this.handleGoBack}
             className={styles.arrow}
           />
 
           {image ? (
-            <img className={styles.image} src={image.original} alt='poster' />
+            <img className={styles.image} src={image} alt='poster' />
           ) : (
             <div className={styles.preloader}>Loading picture...</div>
-          )}
+            )}
+                
           <div className={styles.info}>
             <p className={styles.name}>{name}</p>
             {genres.length > 0 ? (
@@ -249,19 +145,9 @@ class ShowDetailsPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  uid: state.auth.uid,
-  favorites: state.auth.favoriteShowsId,
-  friends: state.auth.friends,
-  name: state.auth.displayName,
-  watchlist: state.auth.watchlist,
   loading: state.auth.isLoading,
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  onAddIdToFavorite: (id, uid) => dispatch(addIdToFavorite(id, uid)),
-    onDeleteFromFavorite: (id, uid) => dispatch(deleteIdFromFavorite(id, uid)),
-    onAddShowToWatchList: (id, uid, name) => dispatch(addFilmToWatchList(id,uid,name))
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShowDetailsPage);
+export default connect(mapStateToProps)(ShowDetailsPage);

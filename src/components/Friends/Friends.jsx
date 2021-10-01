@@ -1,17 +1,22 @@
-import styles from './Friends.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import FriendsList from './FriendsList';
-import Select from 'react-select';
+import { useDispatch, useSelector } from 'react-redux';
 import { collection, getDocs } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore';
 import { addNewFriend } from '../../redux/auth/auth-operations';
 import { getUserUid, getUsersFriends } from '../../redux/auth/auth-selectors';
 
+import FriendsList from './FriendsList';
+import Select from 'react-select';
+
+import styles from './Friends.module.scss';
+
+
 const Friends = () => {
   const dispatch = useDispatch();
+    
   const [person, setPerson] = useState({});
   const [people, setPeople] = useState([]);
+    
   const userUid = useSelector(getUserUid);
   const friends = useSelector(getUsersFriends);
 
@@ -39,7 +44,7 @@ const Friends = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addNewFriend(person));
+      dispatch(addNewFriend(person));
   };
 
   return (

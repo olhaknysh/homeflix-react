@@ -4,24 +4,26 @@ import { getFavoriteShows } from '../../redux/auth/auth-operations';
 import {
   favoriteShows,
   favoriteShowsId,
+  isLoading,
 } from '../../redux/auth/auth-selectors';
+
 import MovieList from '../../components/MovieList';
+import Loader from '../../components/Loader';
 import { HiOutlineEmojiHappy } from 'react-icons/hi';
+
 import styles from './FavoritesPage.module.scss';
-import { isLoading } from '../../redux/auth/auth-selectors'
-import Loader from '../../components/Loader'
+
 
 const FavoritesPage = () => {
-  const dispatch = useDispatch();
-    const ids = useSelector(favoriteShowsId);
-    const loading =useSelector(isLoading)
+    const dispatch = useDispatch();
 
+    const favorites = useSelector(favoriteShows);
+    const ids = useSelector(favoriteShowsId);
+    const loading = useSelector(isLoading);
+    
   useEffect(() => {
     dispatch(getFavoriteShows(ids));
-  }, [ids]);
-
-  const favorites = useSelector(favoriteShows);
-  console.log('favorites', favorites);
+  }, [ids, dispatch]);
 
   return (
     <div className={styles.container}>

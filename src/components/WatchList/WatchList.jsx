@@ -1,15 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserWatchList, getUserUid } from '../../redux/auth/auth-selectors'
 import { Link, withRouter } from 'react-router-dom';
-import styles from './WatchList.module.scss'
-import { TiDelete } from 'react-icons/ti'
-import { IconContext } from "react-icons";
-import { deleteFilmFromWatchList} from '../../redux/auth/auth-operations'
+import { IconContext } from 'react-icons';
+import { deleteFilmFromWatchList } from '../../redux/auth/auth-operations';
+import { getUserWatchList, getUserUid } from '../../redux/auth/auth-selectors'
 
-const WatchList = ({location}) => {
+import { TiDelete } from 'react-icons/ti'
+
+import styles from './WatchList.module.scss';
+
+
+const WatchList = ({ location }) => {
+    const dispatch = useDispatch();
+    
     const userUid = useSelector(getUserUid);
     const watchList = useSelector(getUserWatchList)
-    const dispatch = useDispatch()
 
     const handleDelete = (e) => {
         const { id } = e.currentTarget.dataset;

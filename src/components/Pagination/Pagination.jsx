@@ -1,14 +1,15 @@
+import { useState, useEffect } from 'react';
+
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import { RiArrowRightSLine } from 'react-icons/ri';
+
 import styles from './Pagination.module.scss';
-import { useState, useEffect } from 'react';
+
 
 const Pagination = ({ currentPage, pagesCount, handlePageChange }) => {
   const [page, setPage] = useState(currentPage);
   const [totalPages, setTotalPages] = useState([]);
     const [filteredPaged, setFilteredPages] = useState([]);
-
-    
 
   useEffect(() => {
     setPage(currentPage);
@@ -80,6 +81,7 @@ const Pagination = ({ currentPage, pagesCount, handlePageChange }) => {
     setFilteredPages(result);
   }, [totalPages]);
 
+
   useEffect(() => {
     setTotalPages(pagesCount);
   }, [pagesCount]);
@@ -90,17 +92,17 @@ const Pagination = ({ currentPage, pagesCount, handlePageChange }) => {
   };
 
   const handlePreviousPage = () => {
-    if (page <= 1) {
+    if (Number(page) <= 1) {
       return;
     }
-    const newPage = page - 1;
+    const newPage = Number(page) - 1;
     setPage(newPage);
     handlePageChange(newPage);
   };
 
   const handleNextPage = () => {
-    const newPage = page + 1;
-    if (newPage > pagesCount.length + 1) {
+      const newPage = Number(page) + 1;
+    if (newPage > pagesCount.length) {
       return;
     }
     setPage(newPage);

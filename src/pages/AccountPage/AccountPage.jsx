@@ -6,13 +6,15 @@ import {
     getUserPhoto,
   isLoading
 } from '../../redux/auth/auth-selectors';
-import NoPhoto from '../../utils/images/no-user-image.jpeg';
-import styles from './AccoutPage.module.scss';
+
 import { BiExit } from 'react-icons/bi';
 import Friends from '../../components/Friends';
 import Preferences from '../../components/Preferences'
 import WatchList from '../../components/WatchList'
 import Loader from '../../components/Loader'
+
+import NoPhoto from '../../utils/images/no-user-image.jpeg';
+import styles from './AccoutPage.module.scss';
 
 const AccountPage = () => {
   const dispatch = useDispatch();
@@ -28,9 +30,9 @@ const AccountPage = () => {
       {loading && <Loader />}
       <div className={styles.userInfo}>
         {photo ? (
-          <img className={styles.image} src={photo} alt='user photo' />
+          <img className={styles.image} src={photo} alt='user' />
         ) : (
-          <img className={styles.image} src={NoPhoto} alt='no user photo' />
+          <img className={styles.image} src={NoPhoto} alt='no user' />
         )}
         <div>
           {name && <h2 className={styles.name}>{name}</h2>}
