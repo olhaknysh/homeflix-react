@@ -41,7 +41,7 @@ const favoriteShowsId = createReducer([], {
     payload,
   ],
   [authActions.favoriteShowsIdDeleteSuccess]: (state, { payload }) =>
-    state.filter((item) => item !== payload),
+    state.filter((item) => Number(item) !== Number(payload)),
   [authActions.getCurrentUserSuccess]: (_, { payload }) => payload.favorites,
   [authActions.loginSuccess]: (_, { payload }) => payload.favorites,
   [authActions.registerSuccess]: (_, { payload }) => payload.favorites,

@@ -5,7 +5,7 @@ const CountriesListItem = ({ id, airtime, number, runtime, season, name }) => (
       Season {season}, Episode {number}
     </td>
     <td>Today at {airtime}</td>
-    <td>{runtime} minutes</td>
+    <td>{runtime? runtime : "???"} minutes</td>
   </tr>
 );
 

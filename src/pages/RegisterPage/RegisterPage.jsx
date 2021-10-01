@@ -9,6 +9,8 @@ import Loader from '../../components/Loader';
 import Button from '../../components/Button';
 import { ImGoogle } from 'react-icons/im';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import routes from '../../utils/routes';
 import styles from './RegisterPage.module.scss';
 
@@ -42,7 +44,12 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+      e.preventDefault();
+      if (!userName) {
+        toast.configure();
+        toast.warn('Please enter your name')
+        return;
+      }
     const user = {
       email,
       password,
@@ -94,7 +101,7 @@ const RegisterPage = () => {
           <label htmlFor='password'>Password</label>
           <input
             value={password}
-            type='text'
+            type='password'
             id='password'
             name='password'
             placeholder='Enter you password'

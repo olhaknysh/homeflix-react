@@ -2,7 +2,7 @@ import styles from './Button.module.scss';
 
 const Button = ({ text, handleEvent, children }) => {
   return (
-    <div onClick={() => handleEvent()} className={styles.button}>
+    <div data-testid='button' onClick={() => handleEvent()} className={styles.button}>
       <span></span>
       <span></span>
       <span></span>

@@ -267,7 +267,7 @@ export const addIdToFavorite = (id, uid) => async (dispatch) => {
     const db = getFirestore();
     const userRef = doc(db, 'users', uid);
     await updateDoc(userRef, {
-      favorites: arrayUnion(id),
+      favorites: arrayUnion(Number(id)),
     });
 
     toast.configure();
@@ -288,7 +288,7 @@ export const deleteIdFromFavorite = (id, uid) => async (dispatch) => {
     const db = getFirestore();
     const userRef = doc(db, 'users', uid);
     await updateDoc(userRef, {
-      favorites: arrayRemove(id),
+      favorites: arrayRemove(Number(id)),
     });
 
     toast.configure();

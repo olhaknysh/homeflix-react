@@ -75,18 +75,20 @@ const LoginPage = () => {
             onChange={handleInputChange}
             className={styles.input}
             ref={inputRef}
+            autoComplete='off'
           />
         </div>
         <div className={styles.field}>
           <label htmlFor='password'>Password</label>
           <input
             value={password}
-            type='text'
+            type='password'
             id='password'
             name='password'
             placeholder='Enter you password'
             onChange={handleInputChange}
             className={styles.input}
+            autoComplete='off'
           />
         </div>
         <button className={styles.button} type='submit'>
